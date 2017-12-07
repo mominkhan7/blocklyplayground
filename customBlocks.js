@@ -31,11 +31,37 @@ Blockly.Blocks['clearscreen'] = {
 Blockly.Blocks['catpose'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField("Change Pose")
+            .appendField("Change Cat Pose")
             .appendField(new Blockly.FieldDropdown([["1","1"], ["2","2"], ["3","3"]]), "catIndex");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(175);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
+Blockly.Blocks['slothpose'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField("Change Sloth Pose")
+            .appendField(new Blockly.FieldDropdown([["1","1"], ["2","2"], ["3","3"]]), "slothIndex");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(330);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
+Blockly.Blocks['say'] = {
+    init: function() {
+        this.appendValueInput('SAY_TEXT')
+            .appendField("Say");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
         this.setTooltip("");
         this.setHelpUrl("");
     }
@@ -54,6 +80,19 @@ Blockly.JavaScript['clearscreen'] = function(block) {
 
 Blockly.JavaScript['catpose'] = function(block) {
     var dropdown_catindex = block.getFieldValue('catIndex');
-    var blockCode = 'updatePose('+dropdown_catindex+');';
+    var blockCode = 'updateCatPose('+dropdown_catindex+');';
     return blockCode;
+};
+
+Blockly.JavaScript['slothpose'] = function(block) {
+    var dropdown_slothindex = block.getFieldValue('slothIndex');
+    var blockCode = 'updateSlothPose('+dropdown_slothindex+');';
+    return blockCode;
+};
+
+Blockly.JavaScript['say'] = function(block) {
+    //var say_text = block.getFieldValue('SAY_TEXT');
+    var say_text = Blockly.JavaScript.valueToCode(block, 'SAY_TEXT', Blockly.JavaScript.ORDER_ATOMIC);
+    var blockCode = 'say('+say_text+');';
+    return blockCode; 
 };

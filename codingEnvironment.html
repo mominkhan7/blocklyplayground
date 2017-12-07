@@ -79,6 +79,17 @@
                         <img src="images/cat3_numbered.png" style="margin-left:5px;margin-top:5px;outline-style: solid;outline-width: 1px;height:180px;" />
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <img src="images/sloth1_numbered.png" style="margin-left:5px;margin-top:5px;outline-style: solid;outline-width: 1px;height:180px;" />
+                    </td>
+                    <td>
+                        <img src="images/sloth2_numbered.png" style="margin-left:5px;margin-top:5px;outline-style: solid;outline-width: 1px;height:180px;" />
+                    </td>
+                    <td>
+                        <img src="images/sloth3_numbered.png" style="margin-left:5px;margin-top:5px;outline-style: solid;outline-width: 1px;height:180px;" />
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -97,8 +108,14 @@
         <block type="whenrunclicked"></block>
         <block type="clearscreen"></block>
     </category>
-    <category name="cats" colour="175">
-        <block type="catpose"></block>
+    <category name="Animals" colour="65">
+        <block type="say"></block>
+        <category name="cats" colour="175">
+            <block type="catpose"></block>
+        </category>
+        <category name="sloths" colour="330">
+            <block type="slothpose"></block>
+        </category>
     </category>
 
     <sep></sep>
@@ -198,9 +215,31 @@
      ******************/
     cat1.render();
 
+    /**********************
+     * Defining the sloth *
+     **********************/
+    var slothImage = new Image();
+    slothImage.src = "images/sloth1.png";
+
+    var sloth1 = sprite({
+        context: canvas.getContext("2d"),
+        width: 500,
+        height: 500,
+        image: slothImage,
+        x: 180,
+        y: 0
+    });
+
+    /******************
+     * Show the sloth *
+     ******************/
+    sloth1.render();
+
     var indexToArrays = 0;
     var numOfInstructions = 0;
-    var arrayOfPoses = [];
+    var arrayOfCatPoses = [];
+    var arrayOfSlothPoses = [];
+    var arrayOfTextSayings = []; 
 
     /**************************************
      * RUN and STOP buttons on the canvas *
@@ -227,19 +266,31 @@
         window.requestAnimationFrame(animate);
     }
 
-    function updatePose(poseNum){
-        arrayOfPoses.push(poseNum);
+    function updateCatPose(poseNum){
+        arrayOfCatPoses.push(poseNum);
         numOfInstructions++;
+    }
+
+    function updateSlothPose(poseNum){
+        arrayOfSlothPoses.push(poseNum);
+        numOfInstructions++;
+    }
+
+    function say(str){
+      arrayOfTextSayings.push(str); 
+      numOfInstructions++;       
     }
 
     function animate() {
         setTimeout(function() {
-            setcatImage(arrayOfPoses[indexToArrays]);
-
+            catPose = arrayOfCatPoses[indexToArrays];
+            slothPose = arrayOfSlothPoses[indexToArrays];
+            textToSay = arrayOfTextSayings[indexToArrays];
+            setImages(catPose, slothPose, textToSay);
             indexToArrays++;
-
             if (indexToArrays == numOfInstructions)
                 indexToArrays = 0;
+
 
             if (animation) {
                 window.requestAnimationFrame(animate);
@@ -253,7 +304,7 @@
 
     function resetCanvas(){
         clearCanvas();
-        setcatImage(1);
+        setImages(1,1, ""); 
     }
 
     /*************************************
@@ -269,17 +320,37 @@
      *                        CODE THAT GETS RUN BASED ON BLOCKLY BLOCKS                          *
      **********************************************************************************************/
 
+     function setImages(catIndex, slothIndex, textToSay) {
+        if(!catIndex)
+            catIndex = 1;
+        if(!slothIndex)
+            slothIndex = 1;
+        if(!textToSay)
+            textToSay = "";
+        clearCanvas();
+        setcatImage(catIndex);        
+        setslothImage(slothIndex);
+        ctx.font = '48px sans-serif';
+        ctx.fillText(textToSay, 150, 370);
+        ctx.save();
+        ctx.restore();
+     }
+
     /*****************************
      * Changing the cat's Pose *
      *****************************/
     function setcatImage(catIndex){
-        if(!catIndex)
-          catIndex = 1;
-        clearCanvas();
         catImage.src = "images/cat"+catIndex+".png";
         ctx.drawImage(cat1.image, cat1.x, cat1.y);
-        ctx.save();
-        ctx.restore();
+        
+    }
+
+    /*****************************
+     * Changing the sloth's Pose *
+     *****************************/
+    function setslothImage(slothIndex){
+        slothImage.src = "images/sloth"+slothIndex+".png";
+        ctx.drawImage(sloth1.image, sloth1.x, sloth1.y);
     }
 
     /***********************
